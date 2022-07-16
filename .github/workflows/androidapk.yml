@@ -33,16 +33,11 @@ jobs:
           name: build-reports
           path: ./app/build/reports
 
-      - name: Upload build mapping
+      - name: Upload build apk
         uses: actions/upload-artifact@v2
         with:
           name: build-mapping
-          path: ./app/build/outputs/mapping
-          
-
-  release :
-    if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
+          path: ./app/build/outputs/apk
     needs: [build]
     timeout-minutes: 30
 
