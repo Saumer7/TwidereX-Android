@@ -1,0 +1,41 @@
+name: Android (APK)
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - 211101
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Set up Android SDK License
+        run: yes | /usr/local/lib/android/sdk/tools/bin/sdkmanager --licenses
+
+      - name: Build with Gradle
+        run: ./gradlew :android:build
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-mapping
+          path: ./android/build/outputs/apk
